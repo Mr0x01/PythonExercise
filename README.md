@@ -6,3 +6,6 @@
 
 ## 2.[homesjpspider](https://github.com/Mr0x01/PythonExercise/tree/master/homesjpspider "homesjpspider")（已完成）
 这是针对日本房产网站homes.co.jp的爬虫系统，有一些比较棘手反爬措施，比较具有挑战性。
+
+## 3.[joycity_autocheckin](https://github.com/Mr0x01/PythonExercise/tree/master/joycity_autocheckin "joycity_autocheckin")（已完成）
+这是针对大悦城会员系统的自动每日签到赚积分项目，通过模拟手机端签到请求，达到签到目的。
