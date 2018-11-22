@@ -1,4 +1,5 @@
 # 人人网爬虫
+![logo](https://raw.githubusercontent.com/Mr0x01/PythonExercise/master/renrenspider/rr-logo.gif)
 ## renren.com是什么
 是一个充满黑历史的地方
 ## 为什么爬他
