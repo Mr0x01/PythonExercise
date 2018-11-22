@@ -149,7 +149,7 @@ class Renrenspider(scrapy.Spider):
                 url=next_page_link,
                 cookies=response.meta["cookies"],
                 callback=self.each_album,
-                meta={"cookies":response.meta["cookies"]}
+                meta={"cookies":response.meta["cookies"],"dont_redirect":True}
             )
 
     def each_img(self,response):

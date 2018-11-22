@@ -16,21 +16,27 @@ class RenrenspiderPipeline(ImagesPipeline):
     #     return item
     def get_media_requests(self, item, info):
         yield Request(
-            url=item['img_url'], 
+            url=item['img_url'],
             meta={
-            "friend_name": item["friend_name"],
-            "img_comment":item["img_comment"],
-            "img_date":item["img_date"],
-            "album_name":item["album_name"]
+                "friend_name": item["friend_name"],
+                "img_comment": item["img_comment"],
+                "img_date": item["img_date"],
+                "album_name": item["album_name"]
             })
 
     def file_path(self, request, response=None, info=None):
-        name = request.meta['img_comment'] + "#" + str(request.meta['img_date'])
-        name = re.sub(r'[:]',"：",name)
-        name = re.sub(r'[？\\*|“<>/()]', '', name)
+        name = request.meta['img_comment'] + \
+            "#" + str(request.meta['img_date'])
+        name = re.sub(r'[:]', "：", name)
+        name = re.sub(r'[？\\*|“<>/()]', '', name)[:200]
         friend_name = request.meta['friend_name']
+        friend_name = re.sub(r'[:]', "：", friend_name)
+        friend_name = re.sub(r'[？\\*|“<>/()]', '', friend_name)[:200]
         album_name = request.meta['album_name']
-        filename = u'full/{0}/{1}/{2}.jpg'.format(friend_name, album_name, name)
+        album_name = re.sub(r'[:]', "：", album_name)
+        album_name = re.sub(r'[？\\*|“<>/()]', '', album_name)[:200]
+        filename = u'full/{0}/{1}/{2}.jpg'.format(
+            friend_name, album_name, name)
         return filename
 
     # def item_completed(self, results, item, info):

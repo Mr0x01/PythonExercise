@@ -6,7 +6,7 @@
 # https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
 from scrapy import signals
-
+from scrapy.downloadermiddlewares.retry import RetryMiddleware
 
 class RenrenspiderSpiderMiddleware(object):
     # Not all methods need to be defined. If a method is not defined,
@@ -56,17 +56,10 @@ class RenrenspiderSpiderMiddleware(object):
         spider.logger.info('Spider opened: %s' % spider.name)
 
 
-class RenrenspiderDownloaderMiddleware(object):
+class RenrenspiderDownloaderMiddleware(RetryMiddleware):
     # Not all methods need to be defined. If a method is not defined,
     # scrapy acts as if the downloader middleware does not modify the
     # passed objects.
-
-    @classmethod
-    def from_crawler(cls, crawler):
-        # This method is used by Scrapy to create your spiders.
-        s = cls()
-        crawler.signals.connect(s.spider_opened, signal=signals.spider_opened)
-        return s
 
     def process_request(self, request, spider):
         # Called for each request that goes through the downloader
