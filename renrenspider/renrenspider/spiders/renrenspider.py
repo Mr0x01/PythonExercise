@@ -163,7 +163,7 @@ class Renrenspider(scrapy.Spider):
         try:
             comment = response.css("body > div:nth-child(15) > p:nth-child(3)")[0].css("::text").extract()[1].strip()
         except IndexError :
-            comment = response.css("body > div:nth-child(15) > p:nth-child(3)*::text").extract_first().strip()
+            comment = response.css("body > div:nth-child(15) > p:nth-child(3) *::text").extract_first().strip()
         img_item["img_comment"] = comment
         datetime = response.css("body > div:nth-child(15) > p.time::text").extract_first()
         if datetime == None and datetime == "":
