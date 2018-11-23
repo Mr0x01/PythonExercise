@@ -13,8 +13,8 @@ class Renrenspider(scrapy.Spider):
 
     def login_page(self, response):
         lbskey = response.css("div.form-inline>input[name=lbskey]::attr(value)").extract_first()  #取出登陆需要的值
-        email = ""  #账号
-        password = ""  #密码
+        email = input("输入账号:")  #账号
+        password = input("输入密码:")  #密码
         my_req = scrapy.FormRequest(
             url="http://3g.renren.com/login.do?autoLogin=true&&fx=0",
             method="POST",
