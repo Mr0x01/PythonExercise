@@ -47,9 +47,9 @@ DOWNLOAD_DELAY = 1
 
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
-#SPIDER_MIDDLEWARES = {
-#    'renrenspider.middlewares.RenrenspiderSpiderMiddleware': 543,
-#}
+SPIDER_MIDDLEWARES = {
+    'renrenspider.middlewares.RenrenspiderSpiderMiddleware': 543,
+}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html

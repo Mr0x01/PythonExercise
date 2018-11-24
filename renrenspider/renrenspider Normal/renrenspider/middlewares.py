@@ -74,12 +74,11 @@ class RenrenspiderDownloaderMiddleware(RetryMiddleware):
         return None
 
     def process_response(self, request, response, spider):
-        # Called with the response returned from the downloader.
-
-        # Must either;
-        # - return a Response object
-        # - return a Request object
-        # - or raise IgnoreRequest
+        if request.meta.get('dont_retry', False):
+            return response
+        if response.status not in [200,302]:
+            reason = response_status_message(response.status+"：将重试")
+            return self._retry(request, reason, spider) or response
         return response
 
     def process_exception(self, request, exception, spider):
