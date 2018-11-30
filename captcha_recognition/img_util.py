@@ -8,6 +8,7 @@ class ImgUtil:
     """
     图片处理工具类
     """
+
     @classmethod
     def mark_img(self):
         """
@@ -16,15 +17,15 @@ class ImgUtil:
         """
         cv.startWindowThread()
         cv.namedWindow("preview")
-        path = "sliced\\"
+        path = "result\\"
         for img in os.listdir(path):
             item = cv.imread(path + img)
-            item_b = cv.resize(item, (9, 20), fx=3, fy=3)
+            item_b = cv.resize(item, (18, 40), fx=3, fy=3)
             cv.imshow("preview", item_b)
             cv.waitKey(1)
-            new = input("{0}:".format(time.time()))
-            os.rename(path + img, path + str(time.time()) +
-                      "-" + str(new)+".png")
+            new = input("{0}:".format(img))
+            if new !="" and new!=None:   
+                os.rename(path + img, path + str(new) +"-" +  str(time.time()) + ".png")
 
     @classmethod
     def collect_img(self, amount=100):
@@ -34,8 +35,8 @@ class ImgUtil:
         """
         for i in range(amount):
             result = requests.request(
-                "GET", "/PlatinumHRM-ESS/WebPages/Common/Captcha.aspx")
-            with open("imgs\\"+str(i)+".png", 'wb') as file:
+                "GET", "http://xxx.xxx.xxx/PlatinumHRM-ESS/WebPages/Common/Captcha.aspx")
+            with open("imgs\\" + str(i) + ".png", 'wb') as file:
                 file.write(result.content)
 
     @classmethod
@@ -64,18 +65,18 @@ class ImgUtil:
         sum_pixel = 0
         for row in range(height):
             for col in range(width):
-                val = img.item(row,col,1)
+                val = img.item(col,row)
                 if val != 255:
                     sum_val += val
                     sum_pixel += 1
         th = sum_val / sum_pixel
         for row in range(height):
             for col in range(width):
-                val = img.item(row,col,1)
+                val = img.item(col,row)
                 if val < th:
-                    img[row][col] = 0
+                    img[col][row] = 0
                 else:
-                    img[row][col] = 255
+                    img[col][row] = 255
 
         cv.imwrite("binary\\" + name, img)
         return img
@@ -86,7 +87,7 @@ class ImgUtil:
         切分图片
         由于样本图片的字符横轴定位几乎相同，所以采用了固定的切分方法
         @para name 切分后的文件名
-        @para img  未灰度化的图片
+        @para img  图片
         """
         #img[y: y + h, x: x + w]
         piece = []
@@ -95,16 +96,18 @@ class ImgUtil:
         piece.append(img[0:20, 23:32])
         piece.append(img[0:20, 33:42])
         for i in range(4):
-            cv.imwrite("sliced\\" + name + "-" + str(i) + ".png", piece[i])
-    
+            cv.imwrite("sliced\\" + name + "-" + str(i) + ".png",
+                       piece[i])
+        return piece
+
     @classmethod
-    def drawImgArray(self,img):
+    def drawImgArray(self, img):
         for row in range(img.shape[0]):
             for col in range(img.shape[1]):
-                val = img.item(row,col,1)
+                val = img.item(row, col)
                 if val == 0:
-                    val = "0" 
-                else: 
+                    val = "0"
+                else:
                     val = " "
-                print(val,end="")
+                print(val, end="")
             print("\r")
