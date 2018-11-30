@@ -1,7 +1,7 @@
 # 人人网爬虫
 ![logo](https://raw.githubusercontent.com/Mr0x01/PythonExercise/master/renrenspider/rr-logo.gif)
 ## renren.com是什么
-是一个充满黑历史的地方🤣
+是一个充满黑历史的地方🤣 <br/>
 ![相册](https://raw.githubusercontent.com/Mr0x01/PythonExercise/master/renrenspider/example.gif)
 ## 为什么爬他
 因为他快关站了，虽然数据没什么价值，但是正好来练练手
