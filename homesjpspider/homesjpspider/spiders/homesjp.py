@@ -9,7 +9,9 @@ import urllib
 
 class Homesjp(scrapy.Spider):
     name = "homesjpspider"
-
+    custom_settings = {
+        "DOWNLOAD_DELAY": 10
+    }
     #start_urls = ["https://www.homes.co.jp/chintai/tokyo/list/"]
 
     def start_requests(self):

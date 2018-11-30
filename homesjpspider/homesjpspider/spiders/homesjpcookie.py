@@ -9,7 +9,9 @@ import urllib
 
 class Homesjpcookie(scrapy.Spider):
     name = "homesjpcookie"
-
+    custom_settings = {
+        "DOWNLOAD_DELAY":0
+    }
     def start_requests(self):
         if Building.table_exists() == False:
             Building.create_table()
