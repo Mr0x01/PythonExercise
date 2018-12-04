@@ -9,7 +9,7 @@ import scrapy
 from peewee import *
 
 db = MySQLDatabase(
-    "homesjp",
+    "homesjp2",
     host='127.0.0.1',
     port=3306,
     user='root',
@@ -61,11 +61,11 @@ class UnitModel(Model):
     bukkenid = BigIntegerField(default=-1)
     floor = IntegerField(default=0)
     price = FloatField(default=0.0)
-    kyoueki = CharField(default="")
-    shikikin = CharField(default="")
-    reikin = CharField(default="")
-    housyou = CharField(default="")
-    shikihiki = CharField(default="")
+    kyoueki = FloatField(default=0.0)
+    shikikin = FloatField(default=0.0)
+    reikin = FloatField(default=0.0)
+    housyou = FloatField(default=0.0)
+    shikihiki = FloatField(default=0.0)
     layout = CharField(default="")
     space = FloatField(default=0.0)
     link = CharField(default="")

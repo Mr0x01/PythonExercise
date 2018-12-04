@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import scrapy
 import urllib
 import logging
@@ -10,7 +11,7 @@ import urllib
 class Homesjpcookie(scrapy.Spider):
     name = "homesjpcookie"
     custom_settings = {
-        "DOWNLOAD_DELAY":0
+        "DOWNLOAD_DELAY":1
     }
     def start_requests(self):
         if Building.table_exists() == False:

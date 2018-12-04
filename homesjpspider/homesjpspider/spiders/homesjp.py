@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import scrapy
 import urllib
 import logging
@@ -48,7 +49,7 @@ class Homesjp(scrapy.Spider):
         logging.info("{0}:{1}".format(key, value))
         list = response.css("div.mod-mergeBuilding--rent")
         for item in list:
-            # 上半部分，建筑概要
+            #上半部分，建筑概要
             bukkentype = item.css("span.bType::text").extract_first()
             bukkentame = item.css("span.bukkenName::text").extract_first()
             bukkenurl = item.css(".moduleHead a::attr(href)").extract_first()
@@ -83,19 +84,70 @@ class Homesjp(scrapy.Spider):
                 unit = UnitItem()
                 unit["bukkenid"] = home_itme["bukkenid"]
                 unit["floor"] = tds.css(
-                    ".floar::text").extract_first().strip().replace("階", "")
+                    ".floar::text").extract_first().strip().replace("階", "").replace("地下","-")
                 price = float(tds.css(".price *::text").extract_first()) * 10000
                 unit["price"] = price
-                unit["kyoueki"] = tds.css(
-                    ".kyoueki::text").extract_first().strip()
+
+                unit["kyoueki"] = 0
+                kyoueki = tds.css(".kyoueki::text").extract_first().strip().replace(",","").replace("円","").replace("-","")
+                if kyoueki == "":
+                    kyoueki = 0
+                unit["kyoueki"] = kyoueki
+
                 cost = tds.css(".cost::text").extract_first().split("/")
-                unit["shikikin"] = cost[0].strip()
-                unit["reikin"] = cost[1].strip()
-                unit["housyou"] = cost[2].strip()
-                unit["shikihiki"] = cost[3].strip()
+
+                unit["shikikin"] = 0
+                shikikin = cost[0].strip()
+                if shikikin == "無":
+                    shikikin = 0
+                elif shikikin.find("ヶ月") > -1:
+                    a = float(shikikin.replace("ヶ月",""))
+                    shikikin = a * price
+                elif shikikin.find("万円") > -1:
+                    shikikin = float(shikikin.replace("万円","")) * 10000
+                unit["shikikin"] = shikikin
+
+                unit["reikin"] = 0
+                reikin = cost[1].strip()
+                if reikin == "無":
+                    reikin = 0
+                elif reikin.find("ヶ月") > -1:
+                    a = float(reikin.replace("ヶ月",""))
+                    reikin = a * price
+                elif reikin.find("万円") > -1:
+                    reikin = float(reikin.replace("万円","")) * 10000
+                unit["reikin"] = reikin
+
+                unit["housyou"] = 0
+                housyou = cost[2].strip()
+                if housyou == "-":
+                    housyou = 0
+                elif housyou.find("ヶ月") > -1:
+                    a = float(housyou.replace("ヶ月",""))
+                    housyou = a * price
+                elif housyou.find("万円") > -1:
+                    housyou = float(housyou.replace("万円","")) * 10000
+                unit["housyou"] = housyou
+
+
+                unit["shikihiki"] = 0
+                shikihiki=cost[3].strip()
+                if shikihiki == "-":
+                    shikihiki = 0
+                elif shikihiki.find("ヶ月") > -1:
+                    a = float(shikihiki.replace("ヶ月",""))
+                    shikihiki = a * price
+                elif shikihiki.find("万円") > -1:
+                    shikihiki = float(shikihiki.replace("万円","")) * 10000
+                elif shikihiki.find("%") > -1:
+                    a = float(shikihiki.replace("%","") / 100)
+                    shikihiki = a * price
+                unit["shikihiki"] = shikihiki
+
+
                 unit["layout"] = tds.css(
                     ".layout::text").extract_first().strip()
-                unit["space"] = float(tds.css(".space::text").extract_first().strip().replace("m²",""))
+                unit["space"] = float(tds.css(".space::text").extract_first().strip().replace("m²","").replace(",",""))
                 unit["link"] = tds.css(
                     ".detail a::attr(href)").extract_first().strip()
                 yield unit

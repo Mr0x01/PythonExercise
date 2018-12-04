@@ -1,6 +1,6 @@
 import logging
 from scrapy.cmdline import execute
-name = "homesjpspider"
+name = "homesjpcookie"
 cmd = "scrapy crawl {0}".format(name).split()
 try:
     execute(cmd)

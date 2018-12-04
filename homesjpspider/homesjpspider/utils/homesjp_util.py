@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 homes.jp 的工具类
 """
