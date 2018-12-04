@@ -44,6 +44,7 @@ class Building(Model):
         database = db
 #房间对象
 class UnitItem(scrapy.Item):
+    heyaid = scrapy.Field()
     bukkenid = scrapy.Field()
     floor = scrapy.Field()
     price = scrapy.Field()
@@ -58,6 +59,7 @@ class UnitItem(scrapy.Item):
 #房间模型
 class UnitModel(Model):
     id = AutoField()
+    heyaid = BigIntegerField(default=-1)
     bukkenid = BigIntegerField(default=-1)
     floor = IntegerField(default=0)
     price = FloatField(default=0.0)
@@ -69,6 +71,10 @@ class UnitModel(Model):
     layout = CharField(default="")
     space = FloatField(default=0.0)
     link = CharField(default="")
+    syuyousaikoumen = CharField(default="")
+    heyaid = BigIntegerField(default=-1)
+    lat =  FloatField(default=0.0)
+    lng =  FloatField(default=0.0)
 
     class Meta:
         database = db
@@ -94,3 +100,9 @@ class CookieModel(Model):
     status = IntegerField(default=0)
     class Meta():
         database = db
+
+class UnitItemAdditional(scrapy.Item):
+    syuyousaikoumen = scrapy.Field()
+    heyaid = scrapy.Field()
+    lat = scrapy.Field()
+    lng = scrapy.Field()

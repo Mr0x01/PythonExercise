@@ -20,8 +20,10 @@ class HomesjpspiderPipeline(object):
                 kaisu=item["kaisu"],
             )
             building.save()
+            return item
         if isinstance(item, UnitItem):
             unitModel = UnitModel(
+                heyaid = item["heyaid"],
                 bukkenid=item["bukkenid"],
                 floor=item["floor"],
                 price=item["price"],
@@ -35,6 +37,14 @@ class HomesjpspiderPipeline(object):
                 link=item["link"]
             )
             unitModel.save()
+            return item
+        if isinstance(item,UnitItemAdditional):
+            UnitModel.update(
+                syuyousaikoumen=item["syuyousaikoumen"],
+                lat=item["lat"],
+                lng=item["lng"]
+            ).where(UnitModel.heyaid == item["heyaid"]).execute()
+            return item
         if isinstance(item,CookieItem):
             cookieModel = CookieModel(
                 D_HID = item["D_HID"],
@@ -46,4 +56,4 @@ class HomesjpspiderPipeline(object):
                 TS01ec9519 = item["TS01ec9519"]
             )
             cookieModel.save()
-        return item
+            return item

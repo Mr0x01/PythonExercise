@@ -148,9 +148,19 @@ class Homesjp(scrapy.Spider):
                 unit["layout"] = tds.css(
                     ".layout::text").extract_first().strip()
                 unit["space"] = float(tds.css(".space::text").extract_first().strip().replace("m²","").replace(",",""))
-                unit["link"] = tds.css(
-                    ".detail a::attr(href)").extract_first().strip()
+                unit["link"] = ""
+                link = tds.css(".detail a::attr(href)").extract_first().strip()
+                unit["link"] = link
+                heyaid = link.split("-")[1].replace("//","")
+                unit["heyaid"] = heyaid
                 yield unit
+                yield scrapy.Request(
+                        url=link,
+                        callback=self.heya_info,
+                        method="GET",
+                        meta={"dont_redirect": True},
+                        cookies=_cookies
+                    )
             # 翻页
             if response.css(".nextPage")[0] != None:
                 next_page_url = response.css(".nextPage a")[0]
@@ -159,3 +169,18 @@ class Homesjp(scrapy.Spider):
                     cookies=_cookies,
                     meta={"dont_redirect": True},
                     callback=self.my_parse)
+    def heya_info(self,response):
+        
+        syuyousaikoumen = response.css("#chk-bkc-windowangle::text").extract_first() # #chk-bkc-windowangle
+        contents_json = response.css("#contents::attr(data-page-info)")
+        jobect = json.load(contents_json)
+        heyaid = jobect["data"]["id"]
+        lat = float(jobect["map"]["lat"])
+        lng = float(jobect["map"]["lng"])
+        unitAdditional = UnitItemAdditional()
+        unitAdditional["syuyousaikoumen"] = syuyousaikoumen
+        unitAdditional["heyaid"] = heyaid
+        unitAdditional["lat"] = lat
+        unitAdditional["lng"] = lng
+        yield unitAdditional
+        
