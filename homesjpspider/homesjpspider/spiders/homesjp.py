@@ -11,7 +11,7 @@ import urllib
 class Homesjp(scrapy.Spider):
     name = "homesjpspider"
     custom_settings = {
-        "DOWNLOAD_DELAY": 10
+        "DOWNLOAD_DELAY": 20
     }
     #start_urls = ["https://www.homes.co.jp/chintai/tokyo/list/"]
 
@@ -83,8 +83,11 @@ class Homesjp(scrapy.Spider):
                 tds = tr.css("td")
                 unit = UnitItem()
                 unit["bukkenid"] = home_itme["bukkenid"]
-                unit["floor"] = tds.css(
-                    ".floar::text").extract_first().strip().replace("階", "").replace("地下","-")
+                unit["floor"] = 0
+                floor = tds.css(".floar::text").extract_first().strip().replace("階", "").replace("地下","-")
+                if floor=="-":
+                    floor=0
+
                 price = float(tds.css(".price *::text").extract_first()) * 10000
                 unit["price"] = price
 
@@ -151,7 +154,7 @@ class Homesjp(scrapy.Spider):
                 unit["link"] = ""
                 link = tds.css(".detail a::attr(href)").extract_first().strip()
                 unit["link"] = link
-                heyaid = link.split("-")[1].replace("//","")
+                heyaid = link.split("-")[1].replace("/","")
                 unit["heyaid"] = heyaid
                 yield unit
                 yield scrapy.Request(
@@ -159,7 +162,7 @@ class Homesjp(scrapy.Spider):
                         callback=self.heya_info,
                         method="GET",
                         meta={"dont_redirect": True},
-                        cookies=_cookies
+                        cookies=response.request.cookies
                     )
             # 翻页
             if response.css(".nextPage")[0] != None:
@@ -170,17 +173,20 @@ class Homesjp(scrapy.Spider):
                     meta={"dont_redirect": True},
                     callback=self.my_parse)
     def heya_info(self,response):
-        
         syuyousaikoumen = response.css("#chk-bkc-windowangle::text").extract_first() # #chk-bkc-windowangle
-        contents_json = response.css("#contents::attr(data-page-info)")
-        jobect = json.load(contents_json)
-        heyaid = jobect["data"]["id"]
-        lat = float(jobect["map"]["lat"])
-        lng = float(jobect["map"]["lng"])
-        unitAdditional = UnitItemAdditional()
-        unitAdditional["syuyousaikoumen"] = syuyousaikoumen
-        unitAdditional["heyaid"] = heyaid
-        unitAdditional["lat"] = lat
-        unitAdditional["lng"] = lng
-        yield unitAdditional
+        contents_json = response.css("#contents::attr(data-page-info)").extract_first()
+        try:
+            jobect = json.loads(contents_json)
+            heyaid = jobect["data"]["id"]
+            lat = float(jobect["map"]["lat"])
+            lng = float(jobect["map"]["lng"])
+            unitAdditional = UnitItemAdditional()
+            unitAdditional["syuyousaikoumen"] = syuyousaikoumen
+            unitAdditional["heyaid"] = heyaid
+            unitAdditional["lat"] = lat
+            unitAdditional["lng"] = lng
+            yield unitAdditional
+        except Exception :
+            print (contents_json)
+        
         

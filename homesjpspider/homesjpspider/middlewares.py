@@ -107,8 +107,8 @@ class HomesjpspiderDownloaderMiddleware(RetryMiddleware):
         # - return a Request object
         # - or raise IgnoreRequest
         if spider.name == "homesjpspider":
+            request.replace(dont_filter=True)
             if response.text.find("distil_r_captcha.html?requestId=") > -1:
-                request.replace(dont_filter=True)
                 request.meta["Edited"] = 1
                 reason = response_status_message(response.status)
                 return self._retry(request, reason, spider) or response  # 重试
