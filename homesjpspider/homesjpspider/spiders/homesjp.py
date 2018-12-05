@@ -87,7 +87,8 @@ class Homesjp(scrapy.Spider):
                 floor = tds.css(".floar::text").extract_first().strip().replace("階", "").replace("地下","-")
                 if floor=="-":
                     floor=0
-
+                unit["floor"] = floor
+                
                 price = float(tds.css(".price *::text").extract_first()) * 10000
                 unit["price"] = price
 
