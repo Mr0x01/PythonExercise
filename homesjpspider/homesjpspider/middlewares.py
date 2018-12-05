@@ -81,7 +81,20 @@ class HomesjpspiderDownloaderMiddleware(RetryMiddleware):
         #return None
         if spider.name == "homesjpspider":
             request.headers["referer"] = "https://www.homes.co.jp/chintai/tokyo/city/"
-            if request.meta.get("Edited",-1) == 1:
+            if request.url.find("/chintai/b-")>-1:
+                fresh_cookies = {}
+                cookieModel = CookieModel.get(CookieModel.status == 0)
+                CookieModel.update(status=1).where(
+                    CookieModel.id == cookieModel.id).execute()
+                fresh_cookies["D_HID"] = cookieModel.D_HID
+                fresh_cookies["D_IID"] = cookieModel.D_IID
+                fresh_cookies["D_SID"] = cookieModel.D_SID
+                fresh_cookies["D_UID"] = cookieModel.D_UID
+                fresh_cookies["D_ZID"] = cookieModel.D_ZID
+                fresh_cookies["D_ZUID"] = cookieModel.D_ZUID
+                fresh_cookies["TS01ec9519"] = cookieModel.TS01ec9519
+                request.cookies=fresh_cookies
+            elif request.meta.get("Edited",-1) == 1:
                 logging.error("Cookie将进行更换")
                 _cookies = {}
                 cookieModel = CookieModel.get(CookieModel.status == 0)

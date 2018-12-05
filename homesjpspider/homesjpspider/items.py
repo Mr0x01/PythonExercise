@@ -73,8 +73,8 @@ class UnitModel(Model):
     link = CharField(default="")
     syuyousaikoumen = CharField(default="")
     heyaid = BigIntegerField(default=-1)
-    lat =  FloatField(default=0.0)
-    lng =  FloatField(default=0.0)
+    lat =  CharField(default="")
+    lng =  CharField(default="")
 
     class Meta:
         database = db

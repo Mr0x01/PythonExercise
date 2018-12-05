@@ -157,12 +157,12 @@ class Homesjp(scrapy.Spider):
                 heyaid = link.split("-")[1].replace("/","")
                 unit["heyaid"] = heyaid
                 yield unit
+                
                 yield scrapy.Request(
                         url=link,
                         callback=self.heya_info,
                         method="GET",
-                        meta={"dont_redirect": True},
-                        cookies=response.request.cookies
+                        meta={"dont_redirect": True,"dont_filter":True}                        
                     )
             # 翻页
             if response.css(".nextPage")[0] != None:
@@ -178,8 +178,8 @@ class Homesjp(scrapy.Spider):
         try:
             jobect = json.loads(contents_json)
             heyaid = jobect["data"]["id"]
-            lat = float(jobect["map"]["lat"])
-            lng = float(jobect["map"]["lng"])
+            lat = jobect["map"]["lat"]
+            lng = jobect["map"]["lng"]
             unitAdditional = UnitItemAdditional()
             unitAdditional["syuyousaikoumen"] = syuyousaikoumen
             unitAdditional["heyaid"] = heyaid
@@ -188,5 +188,3 @@ class Homesjp(scrapy.Spider):
             yield unitAdditional
         except Exception :
             print (contents_json)
-        
-        
