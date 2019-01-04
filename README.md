@@ -15,3 +15,6 @@
 
 ## 5.[captcha_recognition](https://github.com/Mr0x01/PythonExercise/tree/master/captcha_recognition)（已完成）
 某人力系统验证码识学习。用了最简单的机器学习算法——KNN。
+
+## 6.[mainichiNHK](https://github.com/Mr0x01/PythonExercise/tree/master/mainichiNHK)（待完成）
+每日NHK，目前只有新闻爬虫（下载存储新闻内容以及对应的音频）部分，以后会有配套的移动端。
