@@ -17,6 +17,6 @@
 ### 训练
 KNN其实没有要训练的，主要训练的是我的打字速度。第一批400个“邻居”是我自己手动打的码，还好只有0~9这十个数字。
 ## 结果
-在加载400个样本，K设置为5，对训练集进行测试本身进行测试时，准确率达到了91%，这个准确率还算凑合吧。后将样本数量翻倍为800个，测试了10张全新图片后，只有1张识别错误（将9识别为了0）<br/>
+在加载400个样本，K设置为5，对训练集进行测试本身进行测试时，准确率达到了91%，这个准确率还算凑合吧。后将样本数量翻倍为800个，测试了10张全新图片，还是有1张识别错误~~!（将9识别为了0）<br/>
 ![矩阵图1](https://raw.githubusercontent.com/Mr0x01/PythonExercise/master/captcha_recognition/1.png)
 ![矩阵图2](https://raw.githubusercontent.com/Mr0x01/PythonExercise/master/captcha_recognition/2.png)
