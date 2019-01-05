@@ -4,6 +4,7 @@ import json
 import pymongo
 import m3u8
 import os
+from bs4 import BeautifulSoup
 from utils.mongo_util import MongoUtil
 from model import News
 
@@ -40,9 +41,16 @@ for date in news_list_json:
             }
         ).count()
         if news_count == 0:
-            news_collect.insert_one(news)
             news_url = "https://www3.nhk.or.jp/news/easy/{0}/{0}.html".format(
                 temp_news.news_id)
+            temp_html = get(news_url)
+            temp_html.encoding = "utf-8"
+            soup = BeautifulSoup(temp_html.text)
+            article_html = soup.select_one("#js-article-body")
+            article_text = article_html.text
+            news["article_html"] = str(article_html)
+            news["article_text"] = str(article_text).replace("\n","")
+
             master_m3u8 = m3u8.load(
                 "https://nhks-vh.akamaihd.net/i/news/easy/{0}.mp4/master.m3u8".format(temp_news.news_id))
             index_0_a_m3u8_url = master_m3u8.playlists[0].uri
@@ -50,6 +58,7 @@ for date in news_list_json:
                 os.mkdir("media_files")
             os.system("ffmpeg.exe -i \"{0}\" -c copy media_files/\"{1}\".mp4".format(
                 index_0_a_m3u8_url, temp_news.news_id))
+            news_collect.insert_one(news)
             # index_0_a_m3u8 = m3u8.load(master_m3u8.playlists[0].uri)
             # for file in index_0_a_m3u8.files:
             #     file_name = file.split("/")[-1].split("?")[0]
