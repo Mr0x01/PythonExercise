@@ -21,3 +21,4 @@ class News:
         self.news_easy_movie_uri = ""
         self.news_display_flag = False
         self.news_web_url = ""
+        self.news_dict = ""
