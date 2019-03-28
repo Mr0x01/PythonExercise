@@ -45,6 +45,7 @@ news_list_str = news_list.text
 if news_list_str.startswith(u'\ufeff'):
     news_list_str = news_list_str.encode('utf8')[3:]
 news_list_json = json.loads(news_list_str)[0]
+my_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
 for date in news_list_json:
     news_today = news_list_json[date]
     for news in news_today:
@@ -66,6 +67,8 @@ for date in news_list_json:
                 news["news_id"], time.time())
             news_dict = get(news_dict_url).text
             news["news_dict"] = news_dict
+            news["insert_time"] = my_time
+
             try:
                 img = get(news["news_web_image_uri"], timeout=10)
                 if img.text.find("記事が見つかりませんでした") == -1:

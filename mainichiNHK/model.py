@@ -22,3 +22,4 @@ class News:
         self.news_display_flag = False
         self.news_web_url = ""
         self.news_dict = ""
+        self.insert_time = ""
