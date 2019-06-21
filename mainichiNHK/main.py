@@ -13,13 +13,13 @@ client = MongoUtil().client
 db = client.mainichiNHK
 news_collect = db.News
 
-proxies = {
-    "http": "http://127.0.0.1:1080",
-    "https": "http://127.0.0.1:1080",
+my_proxies = {
+    "http": "127.0.0.1:1080",
+    "https": "127.0.0.1:1080",
 }
 
 
-def get(url, timeout=60, is_stream=False, proxies=proxies):
+def get(url, proxy=my_proxies, timeout=60, is_stream=False):
     user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36"
     r = requests.request(
         "GET",
@@ -27,7 +27,9 @@ def get(url, timeout=60, is_stream=False, proxies=proxies):
         headers={"user-agent": user_agent},
         timeout=60,
         stream=is_stream,
-        proxies=proxies)
+        verify=False,
+        proxies=proxy
+    )
     r.encoding = 'UTF-8 BOM'
     return r
 
@@ -36,7 +38,8 @@ def get(url, timeout=60, is_stream=False, proxies=proxies):
 try:
     ts = time.time()
     news_list = get(
-        "https://www3.nhk.or.jp/news/easy/news-list.json?_={0}".format(ts))
+        "https://www3.nhk.or.jp/news/easy/news-list.json?_={0}".format(ts)
+    )
 except requests.exceptions.RequestException as err:
     raise err
 
@@ -63,6 +66,8 @@ for date in news_list_json:
             news["news_web_url"] = news_url
             news["article_html"] = str(article_html)
             news["article_text"] = str(article_text).replace("\n", "")
+            if news["article_text"].find("近平") > -1 or news["article_text"].find("毛沢東") > -1 or news["article_text"].find("台湾") > -1 or news["article_text"].find("北朝鮮") > -1 or news["article_text"].find("ファーウェイ") > -1:
+                continue
             news_dict_url = "https://www3.nhk.or.jp/news/easy/{0}/{0}.out.dic?date={1}".format(
                 news["news_id"], time.time())
             news_dict = get(news_dict_url).text
